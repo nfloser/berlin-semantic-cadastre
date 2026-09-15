@@ -4,5 +4,6 @@
     <ProjectReference Include="../BerlinCadastre.Application/BerlinCadastre.Application.csproj" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" />
     <PackageReference Include="ProjNET" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 </Project>
