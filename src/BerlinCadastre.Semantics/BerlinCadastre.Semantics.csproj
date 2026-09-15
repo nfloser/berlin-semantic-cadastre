@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../BerlinCadastre.Domain/BerlinCadastre.Domain.csproj" />
+    <PackageReference Include="dotNetRdf.Core" />
+    <PackageReference Include="dotNetRdf.Shacl" />
+  </ItemGroup>
+</Project>

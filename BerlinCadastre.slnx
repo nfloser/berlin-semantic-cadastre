@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BerlinCadastre.Domain/BerlinCadastre.Domain.csproj" />
+    <Project Path="src/BerlinCadastre.Application/BerlinCadastre.Application.csproj" />
+    <Project Path="src/BerlinCadastre.Infrastructure/BerlinCadastre.Infrastructure.csproj" />
+    <Project Path="src/BerlinCadastre.Semantics/BerlinCadastre.Semantics.csproj" />
+    <Project Path="src/BerlinCadastre.Api/BerlinCadastre.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BerlinCadastre.Domain.Tests/BerlinCadastre.Domain.Tests.csproj" />
+    <Project Path="tests/BerlinCadastre.Application.Tests/BerlinCadastre.Application.Tests.csproj" />
+    <Project Path="tests/BerlinCadastre.Infrastructure.Tests/BerlinCadastre.Infrastructure.Tests.csproj" />
+    <Project Path="tests/BerlinCadastre.Semantics.Tests/BerlinCadastre.Semantics.Tests.csproj" />
+    <Project Path="tests/BerlinCadastre.Api.Tests/BerlinCadastre.Api.Tests.csproj" />
+  </Folder>
+</Solution>

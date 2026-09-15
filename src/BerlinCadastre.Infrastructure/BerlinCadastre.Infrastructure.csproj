@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../BerlinCadastre.Domain/BerlinCadastre.Domain.csproj" />
+    <ProjectReference Include="../BerlinCadastre.Application/BerlinCadastre.Application.csproj" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" />
+    <PackageReference Include="ProjNET" />
+  </ItemGroup>
+</Project>
