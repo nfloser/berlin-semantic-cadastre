@@ -1,0 +1,19 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Cadastre__LoadOnStartup: "true"
+      Cadastre__InitialBoundingBox: ${CADASTRE_INITIAL_BBOX:-391000,5819000,393000,5821000}
+      Cadastre__PageSize: ${CADASTRE_PAGE_SIZE:-1000}
+      Cadastre__MaxPages: ${CADASTRE_MAX_PAGES:-100}
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

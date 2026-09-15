@@ -1,0 +1,21 @@
+name: live-source-smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  berlin-wfs-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Verify current Berlin WFS responses
+        run: dotnet test tests/BerlinCadastre.LiveTests/BerlinCadastre.LiveTests.csproj -c Release --logger "trx;LogFileName=live-source.trx"
