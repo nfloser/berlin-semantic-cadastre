@@ -39,8 +39,9 @@ builder.Services.AddSingleton<TurtleExportService>();
 builder.Services.AddHostedService<CadastreStartupService>();
 
 WebApplication app = builder.Build();
+string applicationVersion = typeof(Program).Assembly.GetName().Version?.ToString(3) ?? "unknown";
 
-app.MapGet("/health", () => Results.Ok(new { status = "ok", version = "1.0.0" }));
+app.MapGet("/health", () => Results.Ok(new { status = "ok", version = applicationVersion }));
 app.MapGet("/ready", (ICadastreRepository repository) =>
 {
     var payload = new { ready = repository.Parcels.Count > 0 && repository.Buildings.Count > 0 && repository.Districts.Count > 0, parcels = repository.Parcels.Count, buildings = repository.Buildings.Count, districts = repository.Districts.Count };
@@ -142,14 +143,14 @@ app.MapGet("/semantic/entity/{kind}/{id}", (string kind, string id, ICadastreRep
     IUriNode entity = full.CreateUriNode(entityUri);
     if (!full.Triples.WithSubject(entity).Any()) return Results.NotFound();
     Graph subgraph = new();
-    foreach (Triple triple in full.Triples.WithSubject(entity)) subgraph.Assert(triple.CopyTriple(subgraph));
+    foreach (Triple triple in full.Triples.WithSubject(entity)) subgraph.Assert(CopyTripleTo(triple, subgraph));
     foreach (Triple link in full.Triples.WithSubject(entity).Where(t => t.Object.NodeType == NodeType.Uri))
     {
         IUriNode objectNode = (IUriNode)link.Object;
         if (objectNode.Uri.AbsoluteUri.EndsWith("/geometry", StringComparison.Ordinal) || objectNode.Uri.AbsoluteUri.Contains("/source/", StringComparison.Ordinal))
-            foreach (Triple triple in full.Triples.WithSubject(objectNode)) subgraph.Assert(triple.CopyTriple(subgraph));
+            foreach (Triple triple in full.Triples.WithSubject(objectNode)) subgraph.Assert(CopyTripleTo(triple, subgraph));
     }
-    StringWriter text = new();
+    System.IO.StringWriter text = new();
     new CompressingTurtleWriter().Save(subgraph, text);
     return Results.Text(text.ToString(), "text/turtle");
 });
@@ -180,6 +181,21 @@ static Point CreateInternalPoint(double x, double y, int srid, CoordinateTransfo
         _ => throw new ArgumentException("Only EPSG:25833 and EPSG:4326 are accepted by the API.")
     };
 }
+
+static Triple CopyTripleTo(Triple triple, IGraph target) => new(
+    CopyNodeTo(triple.Subject, target),
+    CopyNodeTo(triple.Predicate, target),
+    CopyNodeTo(triple.Object, target));
+
+static INode CopyNodeTo(INode node, IGraph target) => node switch
+{
+    IUriNode uriNode => target.CreateUriNode(uriNode.Uri),
+    ILiteralNode literalNode when literalNode.DataType is not null => target.CreateLiteralNode(literalNode.Value, literalNode.DataType),
+    ILiteralNode literalNode when !string.IsNullOrWhiteSpace(literalNode.Language) => target.CreateLiteralNode(literalNode.Value, literalNode.Language),
+    ILiteralNode literalNode => target.CreateLiteralNode(literalNode.Value),
+    IBlankNode blankNode => target.CreateBlankNode(blankNode.InternalID),
+    _ => throw new NotSupportedException($"Cannot copy RDF node type {node.NodeType} into entity subgraph.")
+};
 
 static string NormalizeKind(string kind) => kind.ToLowerInvariant() switch
 {
