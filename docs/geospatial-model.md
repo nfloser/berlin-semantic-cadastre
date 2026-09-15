@@ -60,4 +60,8 @@ Other SRIDs are rejected rather than guessed. Metre distances are never computed
 
 ## Transformation implementation
 
-CRS transformation is isolated in `CoordinateTransformer` using ProjNET and covered by a test that transforms a known Berlin-region UTM coordinate into a plausible WGS84 longitude/latitude range. The transformation implementation is infrastructure, not domain behaviour.
+CRS transformation is isolated in `CoordinateTransformer` using ProjNET. The projected source definition is constructed explicitly as **ETRS89 / UTM zone 33N** with the ETRS89/ETRF89 datum, GRS80 ellipsoid, Transverse Mercator central meridian 15°, scale factor 0.9996, false easting 500000 m and false northing 0 m. This avoids mislabelling a WGS84/UTM geometry as EPSG:25833.
+
+ProjNET models the predefined ETRS89 datum with zero Bursa-Wolf parameters to WGS84. That static approximation is appropriate for the project's visual/interchange GeoJSON path, but it is not presented as a time-dependent survey-grade transformation. Cadastral topology and metric calculations remain in the official EPSG:25833 source space and therefore do not depend on this export transformation.
+
+Tests cover plausible Berlin output, wrong-SRID rejection and centimetre-level forward/reverse round trips for representative coordinates.
