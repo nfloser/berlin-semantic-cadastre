@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using NetTopologySuite.IO;
 
@@ -14,6 +15,7 @@ public sealed class WfsGeoJsonParser
             throw new ArgumentException("WFS response must not be blank.", nameof(json));
         }
 
+        Stopwatch stopwatch = Stopwatch.StartNew();
         using JsonDocument document = JsonDocument.Parse(json);
         if (!document.RootElement.TryGetProperty("features", out JsonElement features) || features.ValueKind != JsonValueKind.Array)
         {
@@ -57,7 +59,8 @@ public sealed class WfsGeoJsonParser
             }
         }
 
-        return new WfsParseResult(accepted, rejected);
+        stopwatch.Stop();
+        return new WfsParseResult(accepted, rejected, stopwatch.Elapsed);
     }
 
     private static string? ReadId(JsonElement feature)

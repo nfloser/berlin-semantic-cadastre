@@ -3,5 +3,6 @@
     <ProjectReference Include="../BerlinCadastre.Domain/BerlinCadastre.Domain.csproj" />
     <PackageReference Include="dotNetRdf.Core" />
     <PackageReference Include="dotNetRdf.Shacl" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 </Project>

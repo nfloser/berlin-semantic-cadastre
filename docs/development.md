@@ -45,7 +45,22 @@ Tests should assert contracts, geometry semantics and output behaviour rather th
 
 `BerlinCadastre.Api.Tests` hosts the ASP.NET Core application with deterministic repository fixtures and verifies public API/export contracts.
 
-`BerlinCadastre.LiveTests` is deliberately excluded from the solution used by normal CI. It checks real Berlin WFS compatibility and can fail because an external service is unavailable; this is why it has its own workflow.
+`BerlinCadastre.LiveTests` is deliberately excluded from the solution used by normal CI. It checks real Berlin WFS compatibility and can fail because an external service is unavailable; this is why it has its own workflow. The live workflow runs on schedule, on manual dispatch, and when its own contract/test files change; ordinary application pushes and pull requests therefore remain independent of third-party WFS availability.
+
+## Performance diagnostics
+
+Performance is measured before optimisation rather than inferred from dataset size. Structured application logs record:
+
+- accepted and rejected source-feature counts;
+- wall-clock time spent waiting for the three concurrent WFS ingestion streams;
+- cumulative WFS request time across paginated source calls;
+- GeoJSON parse and geometry-validation time;
+- domain mapping time;
+- parcel/building/district spatial-relationship derivation time;
+- total ingestion time and managed-memory delta; and
+- RDF triple count, SHACL validation time, Turtle serialisation time, UTF-8 output size and managed-memory delta.
+
+These measurements are diagnostics, not service-level objectives. They are intended to show when bounding-box filtering, indexing, streaming, persistence or other scalability work becomes justified by evidence.
 
 ## Source changes
 

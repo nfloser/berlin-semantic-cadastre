@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using BerlinCadastre.Domain;
 
 namespace BerlinCadastre.Infrastructure.Wfs;
@@ -26,17 +27,27 @@ public sealed class BerlinWfsClient
 
         List<WfsFeature> all = [];
         List<WfsFeatureRejection> rejections = [];
+        TimeSpan parseDuration = TimeSpan.Zero;
+        TimeSpan requestDuration = TimeSpan.Zero;
         for (int page = 0; page < _options.MaxPages; page++)
         {
             int startIndex = page * _options.PageSize;
             Uri requestUri = BuildGetFeatureUri(baseUri, featureType, boundingBox, startIndex);
+            Stopwatch requestStopwatch = Stopwatch.StartNew();
             string body = await GetWithRetryAsync(requestUri, cancellationToken).ConfigureAwait(false);
+            requestStopwatch.Stop();
+            requestDuration += requestStopwatch.Elapsed;
+
             WfsParseResult parsed = _parser.Parse(body, _options.SourceSrid);
+            parseDuration += parsed.ParseDuration;
             all.AddRange(parsed.Features);
             rejections.AddRange(parsed.Rejections);
 
             int pageFeatureCount = parsed.Features.Count + parsed.Rejections.Count;
-            if (pageFeatureCount < _options.PageSize) return new WfsFetchResult(all, rejections);
+            if (pageFeatureCount < _options.PageSize)
+            {
+                return new WfsFetchResult(all, rejections, parseDuration, requestDuration);
+            }
         }
 
         throw new InvalidOperationException($"WFS pagination reached the configured safety limit of {_options.MaxPages} pages.");
