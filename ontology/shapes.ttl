@@ -1,0 +1,26 @@
+@prefix cad: <https://nfloser.github.io/berlin-semantic-cadastre/ontology#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+cad:ParcelShape a sh:NodeShape ;
+    sh:targetClass cad:CadastralParcel ;
+    sh:property [ sh:path cad:identifier ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path geo:hasGeometry ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+cad:BuildingShape a sh:NodeShape ;
+    sh:targetClass cad:Building ;
+    sh:property [ sh:path cad:identifier ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path geo:hasGeometry ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+cad:DistrictShape a sh:NodeShape ;
+    sh:targetClass cad:AdministrativeDistrict ;
+    sh:property [ sh:path cad:identifier ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path geo:hasGeometry ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+cad:GeometryShape a sh:NodeShape ;
+    sh:targetClass geo:Geometry ;
+    sh:property [ sh:path geo:asWKT ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype geo:wktLiteral ] .

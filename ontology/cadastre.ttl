@@ -1,0 +1,23 @@
+@prefix cad: <https://nfloser.github.io/berlin-semantic-cadastre/ontology#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+cad: a owl:Ontology ;
+    rdfs:label "Berlin Semantic Cadastre ontology"@en .
+
+cad:CadastralParcel a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "Cadastral parcel"@en .
+cad:Building a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "Building"@en .
+cad:AdministrativeDistrict a owl:Class ; rdfs:subClassOf geo:Feature ; rdfs:label "Administrative district"@en .
+
+cad:locatedOnParcel a owl:ObjectProperty ;
+    rdfs:domain cad:Building ; rdfs:range cad:CadastralParcel .
+
+cad:locatedIn a owl:ObjectProperty ;
+    rdfs:range cad:AdministrativeDistrict .
+
+cad:identifier a owl:DatatypeProperty .
+cad:sourceEndpoint a owl:DatatypeProperty .
+cad:datasetTitle a owl:DatatypeProperty .
+cad:retrievedAt a owl:DatatypeProperty .
