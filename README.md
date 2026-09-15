@@ -2,7 +2,7 @@
 
 A .NET geospatial and semantic integration platform that transforms official Berlin cadastral and building data into a CRS-safe C# domain model, derives spatial relationships, publishes GeoSPARQL-compatible RDF, and exposes GIS-oriented query and export APIs.
 
-> **Status:** v1 release candidate. The repository is only promoted to `1.0.0` after deterministic CI and container validation are green. It is a read-oriented research integration system, not an authoritative cadastral application.
+> **Status:** `v1.0.0`. Deterministic CI, container validation, geometry/semantic/API integration tests, and the live Berlin WFS contract smoke test were green at release validation on **2026-09-15**. This is a read-oriented research integration system, not an authoritative cadastral application.
 
 ## Overview
 
@@ -173,7 +173,7 @@ dotnet run --project src/BerlinCadastre.Api/BerlinCadastre.Api.csproj
 
 ## Testing
 
-The normal solution test suite is deterministic and does not require Berlin services. It covers domain invariants, geometry/CRS contracts, spatial queries and relationships, WFS parsing/pagination through controlled responses, semantic mapping/SHACL, and ASP.NET Core integration/export behaviour.
+The normal solution test suite is deterministic and does not require Berlin services. It covers domain invariants, geometry/CRS contracts, spatial queries and relationships, WFS parsing/pagination through controlled responses, semantic mapping/SHACL, ASP.NET Core integration/export behaviour, and a deterministic end-to-end pipeline from source-shaped GeoJSON through relationship derivation to GIS/semantic outputs.
 
 Live source compatibility is isolated in `tests/BerlinCadastre.LiveTests` and is intentionally excluded from normal CI.
 
@@ -186,7 +186,15 @@ dotnet test tests/BerlinCadastre.LiveTests/BerlinCadastre.LiveTests.csproj
 
 `.github/workflows/ci.yml` performs restore, format verification, warning-as-error Release build, deterministic tests, Docker Compose validation, and a production image build.
 
-`.github/workflows/live-source-smoke.yml` runs separately on a weekly schedule or manual dispatch and requests one real feature from each configured official Berlin WFS. External WFS availability therefore cannot randomly break every pull request.
+`.github/workflows/live-source-smoke.yml` runs separately on a weekly schedule or manual dispatch, and whenever the live test/workflow contract itself changes. It requests one real feature from each configured official Berlin WFS. External WFS availability therefore cannot randomly break ordinary application pushes or pull requests.
+
+At the `v1.0.0` release gate on **2026-09-15**, both the deterministic CI workflow and the live-source smoke workflow completed successfully.
+
+## Diagnostics
+
+Structured runtime logging records source feature counts, WFS request and GeoJSON parse/validation timings, domain mapping and spatial-relationship timings, total ingestion duration, managed-memory deltas, RDF triple count, SHACL validation time, Turtle serialisation time and output size. These measurements provide evidence for later decisions about bounding-box tuning, indexing, streaming or spatial persistence rather than introducing those components prematurely.
+
+See [`docs/development.md`](docs/development.md) for the measurement details.
 
 ## Limitations
 
