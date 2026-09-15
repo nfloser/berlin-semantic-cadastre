@@ -32,6 +32,14 @@ public sealed class SpatialQueryService
             parcel.Geometry.Geometry.Intersects(analysisGeometry))];
     }
 
+    public IReadOnlyList<Building> FindBuildingsIntersecting(Geometry analysisGeometry)
+    {
+        RequireInternalCrs(analysisGeometry);
+        return [.. _repository.Buildings.Where(building =>
+            building.Geometry.Geometry.EnvelopeInternal.Intersects(analysisGeometry.EnvelopeInternal) &&
+            building.Geometry.Geometry.Intersects(analysisGeometry))];
+    }
+
     public IReadOnlyList<Building> FindBuildingsWithinDistance(Point point, double distanceMetres)
     {
         RequireInternalCrs(point);
@@ -58,8 +66,6 @@ public sealed class SpatialQueryService
     private static void RequireInternalCrs(Geometry geometry)
     {
         if (geometry.SRID != CoordinateReferenceSystem.Etrs89Utm33N.Epsg)
-        {
             throw new ArgumentException("Spatial calculations require EPSG:25833 geometry.", nameof(geometry));
-        }
     }
 }

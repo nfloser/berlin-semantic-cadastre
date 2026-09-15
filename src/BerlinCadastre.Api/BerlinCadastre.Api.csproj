@@ -5,4 +5,7 @@
     <ProjectReference Include="../BerlinCadastre.Infrastructure/BerlinCadastre.Infrastructure.csproj" />
     <ProjectReference Include="../BerlinCadastre.Semantics/BerlinCadastre.Semantics.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="../../ontology/*.ttl" Link="ontology/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
