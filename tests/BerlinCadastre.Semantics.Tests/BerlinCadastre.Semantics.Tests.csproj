@@ -6,4 +6,7 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="../../ontology/shapes.ttl" Link="ontology/shapes.ttl" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
