@@ -11,7 +11,7 @@ public sealed class TurtleExportService
         validator.EnsureConforms(graph, shapesPath);
         CompressingTurtleWriter writer = new();
         StringBuilder builder = new();
-        using StringWriter textWriter = new(builder, System.Globalization.CultureInfo.InvariantCulture);
+        using System.IO.StringWriter textWriter = new(builder, System.Globalization.CultureInfo.InvariantCulture);
         writer.Save(graph, textWriter);
         return builder.ToString();
     }
