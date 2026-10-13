@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`berlin-semantic-cadastre` is a read-oriented integration platform between authoritative Berlin feature services, spatial application logic, semantic linked-data representation and GIS workflows. The architecture is intentionally modular but not microservice-based: one ASP.NET Core process composes small libraries with explicit dependency direction.
+`berlin-semantic-cadastre` is a read-oriented integration platform between authoritative Berlin feature services, spatial application logic, semantic linked-data representation and GIS workflows. One ASP.NET Core process composes focused libraries with explicit dependency direction. The design does not use microservices.
 
 ## Dependency direction
 
@@ -39,7 +39,7 @@ Berlin WFS 2.0
 
 `BerlinWfsClient` only knows how to request feature pages and handle transport concerns. `WfsGeoJsonParser` parses the returned FeatureCollection, records source properties, and rejects missing identifiers/geometry or invalid geometry. `BerlinFeatureMapper` maps accepted boundary objects into domain entities and attaches provenance.
 
-Source attributes are preserved as an attribute dictionary instead of becoming WFS-shaped domain classes. This is deliberate: Berlin can evolve source fields without forcing domain consumers to depend on every provider-specific attribute.
+Source attributes remain in a dictionary at the integration boundary instead of becoming WFS-shaped domain classes. This lets Berlin's provider fields evolve without exposing every source attribute to domain consumers.
 
 ### Domain and application boundary
 
@@ -59,7 +59,7 @@ ASP.NET Core uses explicit DTOs and never returns infrastructure types. Spatial 
 
 ## Storage decision
 
-The v1 default is in-memory storage because the default runtime intentionally targets a bounded analysis window and the required query semantics fit NetTopologySuite. PostGIS is not introduced merely for appearance. If measured feature counts, parse time, memory usage or query latency exceed the in-memory design envelope, spatial persistence is the next architectural step.
+The v1 default is in-memory storage because the default runtime intentionally targets a bounded analysis window and the required query semantics fit NetTopologySuite. PostGIS remains an option if the in-memory approach no longer meets measured needs. If measured feature counts, parse time, memory usage or query latency exceed the in-memory design envelope, spatial persistence is the next architectural step.
 
 ## Readiness and failure behaviour
 
