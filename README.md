@@ -1,16 +1,16 @@
 # berlin-semantic-cadastre
 
-A .NET geospatial and semantic integration platform that transforms official Berlin cadastral and building data into a CRS-safe C# domain model, derives spatial relationships, publishes GeoSPARQL-compatible RDF, and exposes GIS-oriented query and export APIs.
+This .NET platform reads official Berlin cadastral and building data into a C# domain model with explicit coordinate reference systems. It derives spatial relationships, publishes GeoSPARQL-compatible RDF and provides query and export APIs for GIS clients.
 
 > **Status:** `v1.0.0`. Deterministic CI, container validation, geometry/semantic/API integration tests, and the live Berlin WFS contract smoke test were green at release validation on **2026-09-15**. This is a read-oriented research integration system, not an authoritative cadastral application.
 
 ## Overview
 
-Berlin publishes authoritative cadastral and administrative vector data through OGC services. Those datasets are excellent GIS inputs, but cross-domain software still has to solve several distinct problems: feature ingestion, source-schema isolation, CRS correctness, geometry validation, spatial relationship derivation, provenance, semantic representation, and interoperable export.
+Berlin publishes cadastral and administrative vector data through OGC services. Using these datasets across systems requires reliable ingestion, source-schema isolation, coordinate transformations, geometry validation, derived spatial relationships, provenance tracking, semantic representation and interoperable exports.
 
 `berlin-semantic-cadastre` implements that bridge. It keeps official WFS schemas at the infrastructure boundary, normalises geometry into **ETRS89 / UTM zone 33N (EPSG:25833)** for metric calculations, derives parcel/building/district relationships with NetTopologySuite, publishes selected identity and relationship data as RDF using GeoSPARQL and PROV-O, validates graph structure with SHACL, and exports WGS84 GeoJSON for QGIS and other GIS clients.
 
-It deliberately does **not** try to replace QGIS, ALKIS software, or a cadastral editing system.
+It is a read-oriented integration layer. It does not replace QGIS, ALKIS software or a cadastral editing system.
 
 ## Use cases
 
